@@ -1,0 +1,40 @@
+# application.yml
+--- 
+spring: 
+  application: 
+    name: orderservice
+  datasource:
+    url: jdbc:postgresql://orders-db-sv:5432/orders
+    jdbc-url: ${spring.datasource.url}
+    platform: postgres
+    username: postgres
+    password: order
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  # CONSUL 
+  cloud:
+    loadbalancer: 
+      ribbon.enabled: false 
+
+server: 
+  port: 8080 
+#${PORT:${SERVER_PORT:0}}
+#  port: 8080
+#  port: 8081 
+  # per swagger dietro un api gateway 
+  forward-headers-strategy: framework
+  
+# fa il logging dei comandi sql eseguiti 
+#spring.jpa.show-sql: true
+# disable OSIV
+spring.jpa.open-in-view: false
+

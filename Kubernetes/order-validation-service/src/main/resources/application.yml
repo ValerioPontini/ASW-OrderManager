@@ -1,0 +1,43 @@
+# application.yml 
+--- 
+spring: 
+  application: 
+    name: ordervalidationservice
+  datasource:
+    url: jdbc:postgresql://validation-db-sv:5432/validation
+    jdbc-url: ${spring.datasource.url}
+    platform: postgres
+    username: postgres
+    password: valid
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group.id: ordervalidationservice
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+  # CONSUL 
+  cloud:
+    loadbalancer: 
+      ribbon.enabled: false 
+
+server: 
+  port: 8080
+#${PORT:${SERVER_PORT:0}}
+#  port: 8080
+#  port: 8083 
+  # per swagger dietro un api gateway 
+  forward-headers-strategy: framework
+  
+# fa il logging dei comandi sql eseguiti 
+#spring.jpa.show-sql: true
+# disable OSIV
+spring.jpa.open-in-view: false
